@@ -25,7 +25,7 @@ Configurations are set in the `config.py` file.
 配置文件存放于`config.py`文件中。
 
 ```python
-telegram = {
+tgbot = {
     'token': 'TOKEN'
 }
 youdao = {

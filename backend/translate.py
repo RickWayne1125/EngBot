@@ -5,7 +5,7 @@ import requests
 import hashlib
 import time
 from imp import reload
-from config import *
+from config import youdao
 
 import time
 
@@ -34,12 +34,15 @@ def do_request(data):
     return requests.post(YOUDAO_URL, data=data, headers=headers)
 
 
-def connect():
-    q = input("待输入的文字:")
+def connect(text, source, target):
+    # q = input("待输入的文字:")
+    q = text
 
     data = {}
-    data['from'] = 'en'
-    data['to'] = 'zh-CHS'
+    data['from'] = source
+    data['to'] = target
+    # data['from'] = 'en'
+    # data['to'] = 'zh-CHS'
     data['signType'] = 'v3'
     curtime = str(int(time.time()))
     data['curtime'] = curtime
@@ -62,6 +65,8 @@ def connect():
         fo.close()
     else:
         print(response.content.decode())
+
+    return response.content
 
 
 if __name__ == '__main__':
