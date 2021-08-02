@@ -1,5 +1,7 @@
 import config
 
+from translate import connect
+
 import logging
 from typing import Dict
 
@@ -23,89 +25,36 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
+# CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
-reply_keyboard = [
-    ['Age', 'Favourite colour'],
-    ['Number of siblings', 'Something else...'],
-    ['Done'],
-]
-markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-
-
-def facts_to_str(user_data: Dict[str, str]) -> str:
-    """
-    Helper function for formatting the gathered user info.
-    """
-    facts = [f'{key} - {value}' for key, value in user_data.items()]
-    return "\n".join(facts).join(['\n', '\n'])
+# reply_keyboard = [
+#     ['英译汉', '汉译英'],
+#     ['收藏单词', '移除单词'],
+#     ['Done'],
+# ]
+# markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
 
 def start(update: Update, context: CallbackContext) -> int:
     """
     Start the conversation and ask user for input.
     """
-    update.message.reply_text(
-        "Hi! My name is Doctor Botter. I will hold a more complex conversation with you. "
-        "Why don't you tell me something about yourself?",
-        reply_markup=markup,
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text="Hi! My name is Eng Bot. I will help you learn english.\n你好！我是英语机器人！我会帮助你学习英语。"
     )
 
-    return CHOOSING
+
+def en2zh(update, context):
+    text = str(context.args)
+    res = str(connect(text, 'en', 'zh-CHS').decode())
+    context.bot.send_message(chat_id=update.effective_chat.id, text=res)
 
 
-def regular_choice(update: Update, context: CallbackContext) -> int:
-    """Ask the user for info about the selected predefined choice."""
-    text = update.message.text
-    context.user_data['choice'] = text
-    update.message.reply_text(
-        f'Your {text.lower()}? Yes, I would love to hear about that!')
-
-    return TYPING_REPLY
-
-
-def custom_choice(update: Update, context: CallbackContext) -> int:
-    """
-    Ask the user for a description of a custom category.
-    """
-    update.message.reply_text(
-        'Alright, please send me the category first, for example "Most impressive skill"'
-    )
-
-    return TYPING_CHOICE
-
-
-def received_information(update: Update, context: CallbackContext) -> int:
-    """Store info provided by user and ask for the next category."""
-    user_data = context.user_data
-    text = update.message.text
-    category = user_data['choice']
-    user_data[category] = text
-    del user_data['choice']
-
-    update.message.reply_text(
-        "Neat! Just so you know, this is what you already told me:"
-        f"{facts_to_str(user_data)} You can tell me more, or change your opinion"
-        " on something.",
-        reply_markup=markup,
-    )
-
-    return CHOOSING
-
-
-def done(update: Update, context: CallbackContext) -> int:
-    """Display the gathered info and end the conversation."""
-    user_data = context.user_data
-    if 'choice' in user_data:
-        del user_data['choice']
-
-    update.message.reply_text(
-        f"I learned these facts about you: {facts_to_str(user_data)}Until next time!",
-        reply_markup=ReplyKeyboardRemove(),
-    )
-
-    user_data.clear()
-    return ConversationHandler.END
+def zh2en(update, context):
+    text = str(context.args)
+    res = str(connect(text, 'zh-CHS', 'en').decode())
+    context.bot.send_message(chat_id=update.effective_chat.id, text=res)
 
 
 def main(token) -> None:
@@ -116,36 +65,15 @@ def main(token) -> None:
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
 
-    # Add conversation handler with the states CHOOSING, TYPING_CHOICE and TYPING_REPLY
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
-        states={
-            CHOOSING: [
-                MessageHandler(
-                    Filters.regex(
-                        '^(Age|Favourite colour|Number of siblings)$'), regular_choice
-                ),
-                MessageHandler(Filters.regex(
-                    '^Something else...$'), custom_choice),
-            ],
-            TYPING_CHOICE: [
-                MessageHandler(
-                    Filters.text & ~(Filters.command | Filters.regex(
-                        '^Done$')), regular_choice
-                )
-            ],
-            TYPING_REPLY: [
-                MessageHandler(
-                    Filters.text & ~(Filters.command |
-                                     Filters.regex('^Done$')),
-                    received_information,
-                )
-            ],
-        },
-        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
-    )
+    # Add start handler
+    start_handler = CommandHandler('start', start)
+    dispatcher.add_handler(start_handler)
 
-    dispatcher.add_handler(conv_handler)
+    # Add translate handler
+    en2zh_handler = CommandHandler('zh', en2zh)
+    zh2en_handler = CommandHandler('en', zh2en)
+    dispatcher.add_handler(en2zh_handler)
+    dispatcher.add_handler(zh2en_handler)
 
     # Start the Bot
     updater.start_polling()

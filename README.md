@@ -13,10 +13,11 @@ Including:
 | Name           | Description                                  |
 | -------------- | -------------------------------------------- |
 | /en [TEXT]     | From Chinese to English                      |
-| /cn [TEXT]     | From English to Chinese                      |
+| /zh [TEXT]     | From English to Chinese                      |
 | /show [WORD]   | Search the meaning of the word in dictionary |
 | /add [WORD]    | Add the word to your list                    |
 | /remove [WORD] | Remove the word from your list               |
+| /review [NUM]  | Choose a number of random words to review    |
 
 ## Configurations
 
