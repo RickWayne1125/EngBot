@@ -10,14 +10,15 @@
 ## Basic Functions
 Including:
 
-| Name           | Description                                  |
-| -------------- | -------------------------------------------- |
-| /en [TEXT]     | From Chinese to English                      |
-| /zh [TEXT]     | From English to Chinese                      |
-| /show [WORD]   | Search the meaning of the word in dictionary |
-| /add [WORD]    | Add the word to your list                    |
-| /remove [WORD] | Remove the word from your list               |
-| /review [NUM]  | Choose a number of random words to review    |
+| Name             | Description                                                | Schedule                     |
+| ---------------- | ---------------------------------------------------------- | ---------------------------- |
+| /en [TEXT]       | From Chinese to English                                    | Basic Finish                 |
+| /zh [TEXT]       | From English to Chinese                                    | Basic Finish                 |
+| ~~/show [WORD]~~ | Search the meaning of the word in dictionary               | Integrated in translate part |
+| /add [WORD]      | Add the word to your list                                  | On going                     |
+| /remove [WORD]   | Remove the word from your list                             | On going                     |
+| /review [NUM]    | Choose a number of random words to review                  | On going                     |
+| /daily           | Random daily English contents (Famous lines, lyrics, etc.) | To do                        |
 
 ## Configurations
 
