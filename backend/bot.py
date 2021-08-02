@@ -25,15 +25,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-# CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
-
-# reply_keyboard = [
-#     ['英译汉', '汉译英'],
-#     ['收藏单词', '移除单词'],
-#     ['Done'],
-# ]
-# markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
-
 
 def start(update: Update, context: CallbackContext) -> int:
     """
@@ -45,15 +36,39 @@ def start(update: Update, context: CallbackContext) -> int:
     )
 
 
+def formatter(text: Dict) -> str:
+    res = text['query'] + '\n' + '\n'
+    if(not text['isWord']):
+        res += '翻译结果：' + text['translation'] + '\n'
+        res += '\n'
+    else:
+        res += '词典释义：' + '\n'
+        for i in text['basic']['explains']:
+            res += i + '\n'
+        res += '\n'
+    if(text.__contains__('web')):
+        res += '网络释义：' + '\n'
+        for i in text['web']:
+            key = i['key']
+            value = ','.join(i['value'])
+            res += key + ': ' + value + '\n'
+        res += '\n'
+    res += 'Add to list: ' + '/add ' + text['query']
+    return res
+
+
 def en2zh(update, context):
-    text = str(context.args)
-    res = str(connect(text, 'en', 'zh-CHS').decode())
+    text = ' '.join(context.args)
+    print(text)
+    res = connect(text, 'en', 'zh-CHS')
+    res = formatter(res)
     context.bot.send_message(chat_id=update.effective_chat.id, text=res)
 
 
 def zh2en(update, context):
-    text = str(context.args)
-    res = str(connect(text, 'zh-CHS', 'en').decode())
+    text = ' '.join(context.args)
+    res = connect(text, 'zh-CHS', 'en')
+    res = formatter(res)
     context.bot.send_message(chat_id=update.effective_chat.id, text=res)
 
 

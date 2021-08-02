@@ -9,11 +9,20 @@ from config import youdao
 
 import time
 
-reload(sys)
 
 YOUDAO_URL = youdao['url']
 APP_KEY = youdao['app_id']
 APP_SECRET = youdao['app_secret']
+
+
+def changeUpper(text: str, index: int) -> str:
+    new_text = ''
+    for i in range(len(text)):
+        if i == index:
+            new_text += text[i].upper()
+        else:
+            new_text += text[i]
+    return new_text
 
 
 def encrypt(signStr):
@@ -66,8 +75,17 @@ def connect(text, source, target):
     else:
         print(response.content.decode())
 
-    return response.content
+    res = response.content.decode()
+    try:
+        res = eval(res)
+    except NameError:
+        index = res.find('\"isWord\":') + 9
+        print(index)
+        res = changeUpper(res, index)
+        res = eval(res)
+    return res
 
 
 if __name__ == '__main__':
-    connect()
+    text = input('text: ')
+    connect(text, 'en', 'zh')
