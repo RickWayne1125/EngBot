@@ -12,8 +12,8 @@ Including:
 
 | Name             | Description                                                | Schedule                     |
 | ---------------- | ---------------------------------------------------------- | ---------------------------- |
-| /en [TEXT]       | From Chinese to English                                    | Basic Finish                 |
-| /zh [TEXT]       | From English to Chinese                                    | Basic Finish                 |
+| /en [TEXT]       | From Chinese to English                                    | Basically Finished           |
+| /zh [TEXT]       | From English to Chinese                                    | Basically Finished           |
 | ~~/show [WORD]~~ | Search the meaning of the word in dictionary               | Integrated in translate part |
 | /add [WORD]      | Add the word to your list                                  | On going                     |
 | /remove [WORD]   | Remove the word from your list                             | On going                     |
@@ -28,12 +28,12 @@ Configurations are set in the `config.py` file.
 
 ```python
 tgbot = {
-    'token': 'TOKEN'
+    'token': 'TOKEN'	#Telegram Bot Token From @BotFather
 }
 youdao = {
     'url': 'https://openapi.youdao.com/api',
-    'app_id': 'APP ID',
-    'app_secret': 'APP SECRET'
+    'app_id': 'APP ID',	#APP ID From YouDao Open API
+    'app_secret': 'APP SECRET'	# APP Secret Key From YouDao Open API
 }
 ```
 
