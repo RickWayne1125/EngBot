@@ -14,9 +14,9 @@ Including:
 | ---------------- | ---------------------------------------------------------- | ---------------------------- |
 | /en [TEXT]       | From Chinese to English                                    | Basically Finished           |
 | /zh [TEXT]       | From English to Chinese                                    | Basically Finished           |
-| ~~/show [WORD]~~ | Search the meaning of the word in dictionary               | Integrated in translate part |
-| /add [WORD]      | Add the word to your list                                  | On going                     |
-| /remove [WORD]   | Remove the word from your list                             | On going                     |
+| /show            | Show all the words in your list                            | Basically Finished           |
+| /add [WORD]      | Add the word to your list                                  | Basically Finished           |
+| /remove [WORD]   | Remove the word from your list                             | Basically Finished           |
 | /review [NUM]    | Choose a number of random words to review                  | On going                     |
 | /daily           | Random daily English contents (Famous lines, lyrics, etc.) | To do                        |
 
