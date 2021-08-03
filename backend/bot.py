@@ -14,6 +14,7 @@ from telegram.ext import (
     Filters,
     ConversationHandler,
     CallbackContext,
+    PicklePersistence
 )
 
 from config import tgbot
@@ -57,7 +58,7 @@ def formatter(text: Dict) -> str:
     return res
 
 
-def en2zh(update, context):
+def en2zh(update: Update, context: CallbackContext):
     text = ' '.join(context.args)
     print(text)
     res = connect(text, 'en', 'zh-CHS')
@@ -65,17 +66,58 @@ def en2zh(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=res)
 
 
-def zh2en(update, context):
+def zh2en(update: Update, context: CallbackContext):
     text = ' '.join(context.args)
     res = connect(text, 'zh-CHS', 'en')
     res = formatter(res)
     context.bot.send_message(chat_id=update.effective_chat.id, text=res)
 
 
+def add(update: Update, context: CallbackContext):
+    text = ' '.join(context.args)
+    msg = text
+    if context.user_data.__contains__('list'):
+        if context.user_data['list'].__contains__(text):
+            msg += ': Already Added!'
+        else:
+            res = connect(text, 'en', 'zh-CHS')
+            context.user_data['list'].setdefault(text, res)
+            msg += ': Successfully Added!'
+    else:
+        context.user_data['list'] = {}
+        msg = 'List Created Successfully!\n'
+        res = connect(text, 'en', 'zh-CHS')
+        context.user_data['list'].setdefault(text, res)
+        msg = text + ': Successfully Added!'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=msg)
+
+
+def show(update: Update, context: CallbackContext):
+    if context.user_data.__contains__('list'):
+        for i in context.user_data['list'].values():
+            msg = formatter(i)
+            context.bot.send_message(
+                chat_id=update.effective_chat.id, text=msg)
+    else:
+        return None
+
+
+def remove(update: Update, context: CallbackContext):
+    if context.user_data.__contains__('list'):
+        text = ' '.join(context.args)
+        if context.user_data['list'].__contains__(text):
+            del context.user_data['list'][text]
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text=text+': Successfully Removed!')
+    else:
+        return None
+
+
 def main(token) -> None:
     """Run the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater(token)
+    persistence = PicklePersistence(filename='engbotdb')
+    updater = Updater(token, persistence=persistence)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -90,8 +132,17 @@ def main(token) -> None:
     dispatcher.add_handler(en2zh_handler)
     dispatcher.add_handler(zh2en_handler)
 
+    # Add list-control handler
+    add_handler = CommandHandler('add', add)
+    dispatcher.add_handler(add_handler)
+    show_handler = CommandHandler('show', show)
+    dispatcher.add_handler(show_handler)
+    remove_handler = CommandHandler('remove', remove)
+    dispatcher.add_handler(remove_handler)
+
     # Start the Bot
     updater.start_polling()
+    updater.idle()
 
 
 if __name__ == '__main__':

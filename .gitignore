@@ -130,3 +130,6 @@ dmypy.json
 
 # Configurations
 config.py
+
+# User data
+engbotdb
