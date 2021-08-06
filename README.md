@@ -17,7 +17,7 @@ Including:
 | /show            | Show all the words in your list                            | Basically Finished           |
 | /add [WORD]      | Add the word to your list                                  | Basically Finished           |
 | /remove [WORD]   | Remove the word from your list                             | Basically Finished           |
-| /review [NUM]    | Choose a number of random words to review                  | On going                     |
+| /review [NUM]    | Choose a number of random words to review                  | Adding Q&A Functtion         |
 | /daily           | Random daily English contents (Famous lines, lyrics, etc.) | To do                        |
 
 ## Configurations
