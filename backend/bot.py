@@ -4,6 +4,7 @@ from translate import connect
 
 import logging
 from typing import Dict
+import random
 
 from telegram import ReplyKeyboardMarkup, Update, ReplyKeyboardRemove
 import telegram
@@ -54,7 +55,7 @@ def formatter(text: Dict) -> str:
             value = ','.join(i['value'])
             res += key + ': ' + value + '\n'
         res += '\n'
-    res += 'Add to list: ' + '/add ' + text['query']
+    # res += 'Add to list: ' + '/add ' + text['query']
     return res
 
 
@@ -102,6 +103,18 @@ def show(update: Update, context: CallbackContext):
         return None
 
 
+def review(update: Update, context: CallbackContext):
+    num = int(context.args[0])   # number of words to review
+    if context.user_data.__contains__('list'):
+        result = random.sample(sorted(context.user_data['list']), num)
+        for i in result:
+            msg = formatter(context.user_data['list'][i])
+            context.bot.send_message(
+                chat_id=update.effective_chat.id, text=msg)
+    else:
+        return None
+
+
 def remove(update: Update, context: CallbackContext):
     if context.user_data.__contains__('list'):
         text = ' '.join(context.args)
@@ -139,6 +152,8 @@ def main(token) -> None:
     dispatcher.add_handler(show_handler)
     remove_handler = CommandHandler('remove', remove)
     dispatcher.add_handler(remove_handler)
+    review_handler = CommandHandler('review', review)
+    dispatcher.add_handler(review_handler)
 
     # Start the Bot
     updater.start_polling()
