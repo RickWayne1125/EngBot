@@ -17,7 +17,7 @@ Including:
 | /show            | Show all the words in your list                            | Basically Finished           |
 | /add [WORD]      | Add the word to your list                                  | Basically Finished           |
 | /remove [WORD]   | Remove the word from your list                             | Basically Finished           |
-| /review [NUM]    | Choose a number of random words to review                  | Adding Q&A Functtion         |
+| /review [NUM]    | Choose a number of random words to review                  | Adding Q&A Function          |
 | /daily           | Random daily English contents (Famous lines, lyrics, etc.) | To do                        |
 
 ## Configurations
@@ -28,11 +28,11 @@ Configurations are set in the `config.py` file.
 
 ```python
 tgbot = {
-    'token': 'TOKEN'	#Telegram Bot Token From @BotFather
+    'token': 'TOKEN'	# Telegram Bot Token From @BotFather
 }
 youdao = {
     'url': 'https://openapi.youdao.com/api',
-    'app_id': 'APP ID',	#APP ID From YouDao Open API
+    'app_id': 'APP ID',	# APP ID From YouDao Open API
     'app_secret': 'APP SECRET'	# APP Secret Key From YouDao Open API
 }
 ```
